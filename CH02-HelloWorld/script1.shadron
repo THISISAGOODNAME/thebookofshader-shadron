@@ -1,0 +1,7 @@
+parameter vec4 _myColor = vec4(1.0, 0.5, 0.0, 1.0) : range(vec4(0.0, 0.0, 0.0, 0.0), vec4(1.0, 1.0, 1.0, 1.0));
+
+glsl vec4 myShader(vec2 position) {
+    return _myColor;
+}
+
+image MyImage = glsl(myShader, 256, 256);

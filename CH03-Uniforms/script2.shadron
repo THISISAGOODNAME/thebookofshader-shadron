@@ -1,0 +1,8 @@
+const ivec2 u_resolution = ivec2(256, 256);
+
+glsl vec4 myShader(vec2 position) {
+    vec2 uv = gl_FragCoord.xy/u_resolution;
+    return vec4(uv.x, uv.y, 0.0, 1.0);
+}
+
+image MyImage = glsl(myShader, u_resolution.x, u_resolution.y);

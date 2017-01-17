@@ -1,0 +1,23 @@
+const ivec2 u_resolution = ivec2(256, 256);
+
+// Plot a line on Y using a value between 0.0-1.0
+glsl float plot(vec2 st, float pct){
+  return  smoothstep( pct-0.01, pct, st.y) - 
+          smoothstep( pct, pct+0.01, st.y);
+}
+
+glsl vec4 myShader(vec2 position) {
+    vec2 uv = gl_FragCoord.xy/u_resolution;
+
+    float y = uv.x;
+
+    vec3 color = vec3(y);
+
+    // Plot a line
+    float pct = plot(uv, y);
+    color = (1.0-pct)*color+pct*vec3(0.0,1.0,0.0);
+    
+	return vec4(color,1.0);
+}
+
+image MyImage = glsl(myShader, u_resolution.x, u_resolution.y);
