@@ -1,0 +1,8 @@
+parameter ivec2 iResolution = ivec2(256, 256) : hidden();
+
+glsl vec4 mainImage(vec2 position, float iGlobalTime) {
+    vec4 fragColor = vec4(abs(sin(iGlobalTime)), 0.0, 0.0, 1.0);
+    return fragColor;
+}
+
+animation MyImage  = glsl(mainImage, iResolution.x, iResolution.y);

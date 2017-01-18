@@ -1,0 +1,21 @@
+parameter ivec2 iResolution = ivec2(256, 256) : hidden();
+
+glsl vec4 mainImage(vec2 position) {
+    vec2 st = gl_FragCoord.xy/iResolution;
+    vec3 color = vec3(0.0);
+    
+    // bottom-left
+    vec2 bl = step(vec2(0.1),st); 
+    float pct = bl.x * bl.y;
+
+    // top-right 
+    // vec2 tr = step(vec2(0.1),1.0-st);
+    // pct *= tr.x * tr.y;
+    
+    color = vec3(pct);
+
+    vec4 fragColor = vec4(color,1.0);
+    return fragColor;
+}
+
+animation  MyImage  = glsl(mainImage, iResolution.x, iResolution.y);

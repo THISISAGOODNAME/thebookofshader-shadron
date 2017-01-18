@@ -1,0 +1,20 @@
+parameter ivec2 iResolution = ivec2(256, 256) : hidden();
+parameter float radius = 0.5 : range(0.0, 1.0);
+
+glsl float circle(in vec2 _st, in float _radius){
+    vec2 dist = _st-vec2(0.5);
+	return 1.-smoothstep(_radius-(_radius*0.01),
+                         _radius+(_radius*0.01),
+                         dot(dist,dist)*4.0);
+}
+
+glsl vec4 mainImage(vec2 position) {
+    vec2 st = gl_FragCoord.xy/iResolution;
+    
+    vec3 color = vec3(circle(st,radius));
+
+    vec4 fragColor = vec4(color,1.0);
+    return fragColor;
+}
+
+animation  MyImage  = glsl(mainImage, iResolution.x, iResolution.y);

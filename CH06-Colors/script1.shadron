@@ -1,0 +1,17 @@
+parameter vec3 colorA = vec3(0.149,0.141,0.912) : range(vec3(0.0,0.0,0.0), vec3(1.0,1.0,1.0));
+parameter vec3 colorB = vec3(1.000,0.833,0.224) : range(vec3(0.0,0.0,0.0), vec3(1.0,1.0,1.0));
+
+glsl vec4 myShader(vec2 position, float time) {
+    vec3 color = vec3(0.0);
+
+    float pct = abs(sin(time));
+
+    // Mix uses pct (a value from 0-1) to 
+    // mix the two colors
+    color = mix(colorA, colorB, pct); 
+
+    return vec4(color,1.0);
+}
+
+
+animation MyImage  = glsl(myShader, 256, 256);
