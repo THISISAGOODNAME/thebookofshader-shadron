@@ -1,0 +1,48 @@
+parameter ivec2 iResolution = ivec2(256, 256) : hidden();
+
+// YUV to RGB matrix
+glsl mat3 yuv2rgb = mat3(1.0, 0.0, 1.13983, 
+                    1.0, -0.39465, -0.58060, 
+                    1.0, 2.03211, 0.0);
+
+// RGB to YUV matrix
+glsl mat3 rgb2yuv = mat3(0.2126, 0.7152, 0.0722,
+                    -0.09991, -0.33609, 0.43600, 
+                    0.615, -0.5586, -0.05639);
+
+
+glsl float box(in vec2 _st, in vec2 _size){
+    _size = vec2(0.5) - _size*0.5;
+    vec2 uv = smoothstep(_size,
+                        _size+vec2(0.001),
+                        _st);
+    uv *= smoothstep(_size,
+                    _size+vec2(0.001),
+                    vec2(1.0)-_st);
+    return uv.x*uv.y;
+}
+
+glsl float cross(in vec2 _st, float _size){
+    return  box(_st, vec2(_size,_size/4.)) + 
+            box(_st, vec2(_size/4.,_size));
+}
+
+glsl vec4 mainImage(vec2 position, float iGlobalTime) {
+    vec2 st = gl_FragCoord.xy/iResolution.xy;
+    vec3 color = vec3(0.0);
+
+    // UV values goes from -1 to 1
+    // So we need to remap st (0.0 to 1.0) 
+    st -= 0.5;  // becomes -0.5 to 0.5
+    st *= 2.0;  // becomes -1.0 to 1.0
+
+    // we pass st as the y & z values of 
+    // a three dimentional vector to be
+    // properly multiply by a 3x3 matrix
+    color = yuv2rgb * vec3(0.5, st.x, st.y);
+
+    vec4 fragColor = vec4(color,1.0);
+    return fragColor;
+}
+
+animation MyImage  = glsl(mainImage, iResolution.x, iResolution.y);
